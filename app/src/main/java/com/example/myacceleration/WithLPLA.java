@@ -118,7 +118,6 @@ public class WithLPLA extends AppCompatActivity {
             textViewMaxX.setText("Max X : 0");
             textViewMaxY.setText("Max Y : 0");
             textViewMaxZ.setText("Max Z : 0");
-            Log.e("EXAMPLE", "change");
         });
     }
 
