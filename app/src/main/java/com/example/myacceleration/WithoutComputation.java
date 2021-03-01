@@ -7,24 +7,27 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.Arrays;
 
 /**
  * Main activity of the application which displays acceleration information
  * Activité principal de l'application qui permet d'afficher les informations sur l'accélération.
  */
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
+public class WithoutComputation extends AppCompatActivity implements SensorEventListener {
 
-    // TODO compute the hz
-
+    /**
+     * Max values
+     */
     private float maxX;
     private float maxY;
     private float maxZ;
+
+    /**
+     * TextView
+     */
     private TextView textViewMaxX;
     private TextView textViewMaxY;
     private TextView textViewMaxZ;
@@ -32,15 +35,31 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private TextView y;
     private TextView z;
     private TextView hz;
+
+    /**
+     * The sensor
+     */
     private Sensor accelerometer;
+
+    /**
+     * Contains the accelerometer' values
+     */
     private float[] mGravity;
+
+    /**
+     * Manager
+     */
     private SensorManager mSensorManager;
+
+    /**
+     * Button that set to 0 the values
+     */
     private Button restart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_without_computation);
 
         // init graphical component
         this.x = findViewById(R.id.x);
@@ -70,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 maxX = 0;
                 maxY = 0;
                 maxZ = 0;
+                hz.setText("Hz :");
                 textViewMaxX.setText("Max X : 0");
                 textViewMaxY.setText("Max Y : 0");
                 textViewMaxZ.setText("Max Z : 0");
@@ -85,14 +105,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
      */
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Log.e("DEBUGG", "event : "+ Arrays.toString(event.values.clone()));
         mGravity = event.values;
-        float angleX = (float) (getDeviceAngles()[0]*9.80665);
-        float angleY = (float) (getDeviceAngles()[1]*9.80665);
-        float angleZ = (float) (getDeviceAngles()[2]*9.80665);
-        x.setText("X : "+Math.abs(angleX));
-        y.setText("Y : "+Math.abs(angleY));
-        z.setText("Z : "+Math.abs(angleZ));
+        float angleX = (float) (getDeviceAngles()[0]);
+        float angleY = (float) (getDeviceAngles()[1]);
+        float angleZ = (float) (getDeviceAngles()[2]);
+        x.setText("X : "+angleX);
+        y.setText("Y : "+angleY);
+        z.setText("Z : "+angleZ);
 
         if(Math.abs(angleX) > maxX){
             textViewMaxX.setText("Max X : "+angleX);
@@ -109,9 +128,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
     /**
      * This method allows to find the acceleration for each acceleration.
@@ -120,13 +137,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
      *         Un tableau contenant les informations de l'accélération pour chaque axe.
      */
     public float[] getDeviceAngles() {
-        float[] g = mGravity.clone();
-        //double normOfG = Math.sqrt(g[0] * g[0] + g[1] * g[1] + g[2] * g[2]);
-        // Normalize the accelerometer vector
-        //g[0] = (float) (g[0] / normOfG);
-        //g[1] = (float) (g[1] / normOfG);
-        //g[2] = (float) (g[2] / normOfG);
-        return g;
+        return mGravity.clone();
     }
 
 
